@@ -1,0 +1,6 @@
+.gitignore
+.buildpath
+.project
+application/configs/
+data/
+temp/
