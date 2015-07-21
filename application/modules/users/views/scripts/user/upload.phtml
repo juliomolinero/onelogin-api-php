@@ -1,0 +1,12 @@
+<?php 
+echo 'File Uploaded'.$this->fileName.'<br/>';
+echo $this->errorCode.'<br/>';
+?>
+<script type="text/javascript">
+<!--
+//JQUERY functions ------------------->
+$(document).ready(function(){
+	parent.$("#uploadMsg").html('<?php echo $this->message;?>').show();
+});
+-->
+</script>

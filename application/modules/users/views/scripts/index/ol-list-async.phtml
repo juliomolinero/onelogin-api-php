@@ -1,0 +1,24 @@
+<?php if ( isset($this->users) ) { ?>
+<table id='tblOlUser'>
+<tr>
+<th>Open Id Name</th>
+<th>Email</th>
+<th>Status</th>
+<th>Last Login</th>
+<th>Delete</th>
+</tr>
+<?php foreach($this->users as $user){ ?>
+<tr>
+<td><?php echo $user->openidname;?></td>
+<td><?php echo $user->email;?></td>
+<td><?php echo $this->getUserStatus($user->status);?></td>
+<td><?php echo $user->lastlogin;?></td>
+<?php if($this->currentUser == $user->openidname) {?>
+<td>&nbsp;</td>
+<?php } else { ?>
+<td><img onclick="deleteUser('<?php echo intval($user->id); ?>');" alt="Delete user" title='Delete user' src="<?php echo $this->baseUrl();?>/img/delete_icon.png"></td>
+<?php }?>
+</tr>
+<?php }?>    
+</table>
+<?php } ?>

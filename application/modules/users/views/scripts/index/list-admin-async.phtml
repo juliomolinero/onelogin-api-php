@@ -1,0 +1,58 @@
+<script type="text/javascript">
+<!--
+var baseUrl = '<?php echo $this->baseUrl();?>';
+// Set active
+var setActiveAsync = baseUrl + '/admin/index/set-active-async';
+var unsetActiveAsync = baseUrl + '/admin/index/unset-active-async';
+//JQUERY functions ------------------->
+$(document).ready(function(){	
+	// Handle ActiveOn column event
+	$( "div[id^='divActiveOn_']" ).click( function() {
+		var divId = this.id;
+		var userId = divId.replace('divActiveOn_', '');
+		$("#"+divId).hide();
+		$("#divActiveOff_"+userId).show();
+		// Unset active via JSON					
+		$.post(unsetActiveAsync, { 'id':userId } );
+	});
+	// Handle ActiveOff column event
+	$( "div[id^='divActiveOff_']" ).click( function() {
+		var divId = this.id;
+		var userId = divId.replace('divActiveOff_', '');
+		$("#"+divId).hide();
+		$("#divActiveOn_"+userId).show();
+		// Set active via JSON					
+		$.post(setActiveAsync, { 'id':userId } );
+	});
+});
+//-->
+</script>
+<?php if ( isset($this->users) ) { ?>
+<table id='tblAdminUser'>
+<tr>
+<th>User Name</th>
+<th>Email</th>
+<th>Last Login</th>
+<th>Active</th>
+</tr>
+<?php foreach($this->users as $user){ ?>
+<tr>
+<td>
+<?php echo stripslashes($user->user);?>
+</td>    
+<td><?php echo stripslashes($user->email); ?></td>
+<td><?php echo ($user->last_login > 0) ? date('Y-m-d- H:i:s', $user->last_login) : '&nbsp;'; ?></td>
+<?php if($this->currentUser == $user->user) {?>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<?php } else { ?>
+<td>
+<?php $activeOn = ($user->active==1) ? 'visible' : 'invisible'; $activeOff = ($user->active==0) ? 'visible' : 'invisible';?>
+<div id='divActiveOn_<?php echo intval( $user->id );?>' class='checkOn <?php echo $activeOn;?>'><div class='lftCheckMark'>&#x2714;</div><div class='rgtBullet'></div></div>
+<div id='divActiveOff_<?php echo intval( $user->id );?>' class='checkOff <?php echo $activeOff;?>'><div class='lftBullet'></div></div>
+</td>
+<?php }?>
+</tr>    
+<?php } // end foreach ?>
+</table>
+<?php } ?>

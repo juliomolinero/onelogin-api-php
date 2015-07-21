@@ -1,0 +1,18 @@
+<div style="margin:10px;" >
+<img src="<?php echo $this->baseUrl();?>/img/sad.png" style="float:right;" />
+<h2><?php echo $this->message ?></h2><br/>
+<?php if ( 'development' == APPLICATION_ENV ) { ?>
+	  <h3>Exception information:</h3>
+	  <p>
+	      <b>Message:</b> <?php echo $this->exception->getMessage() ?>
+	  </p>
+	
+	  <h3>Stack trace:</h3>
+	  <p><?php echo str_replace('#', '<br/>#', $this->exception->getTraceAsString()); ?></p>
+	
+	  <h3>Request Parameters:</h3>
+	  <p><?php echo var_export($this->request->getParams(), true) ?></p>
+<?php } else { ?>
+	  <p><?php echo $this->exception->getMessage() ?></p>
+<?php } ?>
+</div>

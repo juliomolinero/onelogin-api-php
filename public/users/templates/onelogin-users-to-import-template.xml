@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+<user>
+  <username>user_name_or_email</username>  
+  <firstname>first_name</firstname>
+  <lastname>last_name</lastname>
+  <email>email</email>
+</user>
+</users>

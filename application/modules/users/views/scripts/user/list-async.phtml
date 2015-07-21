@@ -1,0 +1,21 @@
+<?php if( empty($this->applicationUsersToImport) ){?>
+<div class='warning'>No pending users to be added to OneLogin</div>
+<?php } else { $len = strlen('Add Users to OneLogin') * 10; ?>
+<div><input type="button" class='button' style='width:<?php echo $len.'px';?>;' id='btnAddImportedUsersToApplication' onclick='addImportedUsersToApplication();' value="Add Users to OneLogin"/></div>
+<table id='tblApplicationUsersToImport'>
+<tr>
+<th style='width: 10%;'>User Name</th>
+<th style='width: 20%;'>First Name</th>
+<th style='width: 20%;'>Last Name</th>
+<th style='width: 25%;'>Email</th>
+</tr>
+<?php foreach ($this->applicationUsersToImport as $user) {?>
+<tr>
+<td><?php echo stripslashes($user->user_name);?></td>
+<td><?php echo stripslashes($user->first_name);?></td>
+<td><?php echo stripslashes($user->last_name);?></td>
+<td><?php echo stripslashes($user->email);?></td>
+</tr>
+<?php }?><!-- End Application Users -->
+</table><!-- End tblApplicationUsersToImport -->
+<?php }?>

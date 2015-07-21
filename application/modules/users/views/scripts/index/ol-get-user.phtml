@@ -1,0 +1,149 @@
+<style>
+<!--
+#olUser{
+	padding:10px;
+	width:85%;
+	margin-left: auto; 
+	margin-right: auto;
+	margin-top:20px;
+	border: solid 1px rgb(0, 133, 195);
+	border-radius:5px;
+	min-height:500px;
+}
+#olUser div ul li{    
+    padding: 3px;
+    margin: 3px;
+}
+/* First Line */
+.id{
+	margin-top:5px;
+	width: 10%;
+	position:absolute;	
+}
+.openidname{
+	margin-top:5px;
+	margin-left:250px;
+	width: 10%;
+	position:absolute;
+}
+.email{
+	margin-top:5px;
+	margin-left:550px;
+	width: 10%;
+	position:absolute;
+}
+/* Second Line */
+.username{
+	margin-top:55px;
+	width: 10%;
+	position:absolute;
+}
+.firstname{
+	margin-top:55px;
+	margin-left:300px;
+	width: 10%;
+	position:absolute;
+}
+.lastname{
+	margin-top:55px;
+	margin-left:600px;
+	width: 10%;
+	position:absolute;
+}
+/* Third Line */
+.phone{
+	margin-top:105px;
+	width: 10%;
+	position:absolute;
+}
+.status{
+	margin-top:105px;
+	margin-left:250px;
+	width: 10%;
+	position:absolute;
+}
+.invalidloginattempts{
+	margin-top:105px;
+	margin-left:550px;
+	width: 10%;
+	position:absolute;
+}
+/* Fourth Line */
+.invitationsentat{
+	margin-top:155px;
+	width: 25%;
+	position:absolute;
+}
+.createdat{
+	margin-top:155px;
+	margin-left:350px;
+	width: 20%;
+	position:absolute;
+}
+.activatedat{
+	margin-top:155px;
+	margin-left:650px;
+	width: 25%;
+	position:absolute;
+}
+/* Fifth Line */
+.lastlogin{
+	margin-top:205px;
+	width: 20%;
+	position:absolute;
+}
+.passwordchangedat{
+	margin-top:205px;
+	margin-left:300px;
+	width: 25%;
+	position:absolute;
+}
+.updatedat{
+	margin-top:205px;
+	margin-left:670px;
+	width: 20%;
+	position:absolute;
+}
+/* Sixth Line */
+.roles{
+	margin-top:255px;
+	width: 40%;	
+	position:absolute;
+}
+-->
+</style>
+<div id='olUser'>
+<?php if ( isset($this->user) ) { ?>
+<?php 
+$elementsNotDisplayed = array('directory-id', 'distinguished-name', 'external-id', 'group-id', 'locale-code', 'locked-until', 'member-of');
+
+foreach($this->user as $child){
+    
+    if( !in_array( strtolower($child->getName()), $elementsNotDisplayed  ) ){
+        $tagName = trim( str_replace('-', '&nbsp;', $child->getName()) );
+        $className = trim( str_replace('-', '', $child->getName()) );
+        // Get status description if needed
+        if ( strtolower($className)=='status' ) {
+            $description = $this->getUserStatus( trim($child) );
+        } else {
+            $description = trim($child);
+        }
+        echo '<div class="'.$className.'"><b>'.ucfirst($tagName).'</b>:' . $description;
+        // Get children
+        foreach ($child->children() as $subChild){
+            //echo $subChild->getName() . ' : ' . $subChild . '<br />';
+            echo '<ul>';
+            // Get children
+            foreach ($subChild->children() as $subSubChild){
+                echo '<li>'.$subSubChild->getName() . ' : ' . $subSubChild . '</li>';
+            }            
+            echo '</ul>';
+        }
+        echo '</div>';
+    } // End if not in array
+    
+} // end foreach
+?>
+<?php } ?>
+<div>&nbsp;</div>
+</div>

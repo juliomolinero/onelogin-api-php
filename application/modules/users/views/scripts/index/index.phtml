@@ -1,0 +1,355 @@
+<style>
+<!--
+#homeAdminUser{
+	padding:10px;
+	width:90%;
+	margin-left: auto; 
+	margin-right: auto;
+	margin-top:20px;
+	border: solid 1px rgb(0, 133, 195);
+	border-radius:5px;
+	min-height:500px;
+}
+/* =========== Table Admin User style ======== */
+#divListAdmin{
+	width:67%;
+	float:left;
+}
+#tblAdminUser{	
+    width:98%;
+	border: solid 1px rgb(245, 245, 245);
+	font-size: 14px;
+	text-align:center;
+}
+#tblAdminUser th{	
+    background-color: rgb(0, 133, 195);	 
+	padding:5px; 
+	color:#ffffff; 
+	filter:alpha(opacity=80);	
+	opacity:0.80;	
+}
+#tblAdminUser td img1{
+	height: 20px;
+	width: 20px;
+	cursor: pointer;
+	border: none;
+}
+#tblAdminUser tr:hover{
+	background-color: rgb(245, 245, 245);	
+}
+/* ============== Overlay style ========== */
+.divListAdminOverlay{		
+	background:#f5f7f7;
+	opacity:0.7;
+	border-radius: inherit;
+	display:none; 
+	position:absolute;
+}
+.divListAdminGeneral{
+	color: #0c5093;    
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0px 0px 3px 0px;
+    max-height: 13px;
+    overflow: hidden;
+    padding: 3px;
+}
+/* ======== Add admin form style ============ */
+#divAddAdmin{
+	width:30%;
+	float: right;
+	margin-right: 20px;	
+}
+.addAdminHeader{
+	color: #ffffff;
+    background-color: rgb(0, 56, 107);
+    border: 1px solid rgb(0, 56, 107);
+    padding: 10px;
+    text-align: center;	   
+	filter:alpha(opacity=90);	
+	opacity:0.90;     
+}
+.addAdminWrapper{
+	border: 1px solid rgb(245, 245, 245);
+    padding: 20px;
+}
+.input{    
+    border: solid 1px #bdc3c7;;
+    border-radius: 5px;        
+    height: 30px;
+    margin-bottom: 15px;
+    text-align: center;
+    width: 100%;
+}
+.button {    
+    background: none repeat scroll 0 0 #3498db;
+	border: solid 1px #3498db;        
+    color: #ecf0f1;    
+    height: 30px;    
+    width: 100%;	
+	border-radius: 5px;
+	font-weight: bold;
+}
+/************************* Nice Check boxes styles ****************************/
+.checkOn {
+	cursor: pointer;
+	height: 15px;
+	width: 35px;
+	border-radius: 20px;	
+	background-color: #4f8a10;
+    border: 1px solid #4f8a10;
+    color: #ffffff;
+	filter:alpha(opacity=80);	
+	opacity:0.80;
+	margin-left: auto;
+	margin-right: auto;		
+}
+.checkOff{
+	cursor: pointer;
+	height: 15px;
+	width: 35px;
+	border-radius: 20px;	
+	background-color: #bdc3c7;
+    border: 1px solid #bdc3c7;
+    color: #bdc3c7;
+	filter:alpha(opacity=90);
+	opacity:0.90;
+	margin-left: auto;
+	margin-right: auto;	
+}
+.visible{
+	display: block;
+}
+.invisible{
+	display: none;
+}
+.rgtBullet{	
+	height: 13px;
+	width: 14px;
+	border-radius: 15px;
+	background-color: #ffffff;
+	float: right;
+	margin: 1px 1px 0 0;
+}
+.lftBullet{	
+	height: 13px;
+	width: 14px;
+	border-radius: 15px;
+	background-color: #ffffff;
+	float: left;
+	margin: 1px 0 0 1px;
+}
+.lftCheckMark{
+	height: 8px;
+	width: 8px;	
+	float: left;
+	font-size: 12px;
+	margin: -1px 0 0 4px;
+}
+/************************* End Check boxes nice styles ****************************/
+/* ======================= Applications List Options ================== */
+.divUserApplicationsList{
+	background-color: #0C5093;
+	margin-left: 60px;
+	margin-top: 7px;
+	border: solid 1px #0C5093;
+	display: none;
+	position: absolute;
+	border-radius: 6px 6px 6px 6px;
+	padding: 5px;
+	color: #FFFFFF;	
+}
+.divUserApplicationsList:before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 5px;
+    border-width: 0 5px 5px;
+    border-style: solid;
+    border-color: #0C5093 transparent;
+}
+.divUserApplicationWrapper {
+    border: 1px solid #ccc;
+    border-radius: 5px;    
+    color: #000;
+    margin: 5px;    
+    text-align: center;
+	display: inline-block;
+	vertical-align: top;
+	max-width: 120px;
+	min-width: 110px;
+	position: relative;
+	box-shadow: 4px 4px 4px #DEDEDE;
+	padding: 5px;	
+	min-height: 150px;
+}
+#divUserApplications{
+	padding: 5px;
+	max-width: 500px;	
+	margin-top: 5px;
+	border: solid 1px rgb(0, 133, 195);
+	border-radius: 5px;	
+	text-align: left;
+	background: white;
+}
+-->
+</style>
+<script type="text/javascript">
+<!--
+var baseUrl = '<?php echo $this->baseUrl();?>';
+var listAdminAsync = baseUrl + '/users/index/list-admin-async';
+var deleteAdminAsync = baseUrl + '/users/index/delete-admin-async'; 
+var addAdminAsync = baseUrl + '/users/index/add-admin-async';
+// Set active
+var setActiveAsync = baseUrl + '/admin/index/set-active-async';
+var unsetActiveAsync = baseUrl + '/admin/index/unset-active-async';
+// JavaScript functions ========================================>
+function overlayDivListAdmin(){
+	var divSelectedPostion = $("#divListAdmin").position();
+	var divTop = divSelectedPostion.top;
+	var divLeft = divSelectedPostion.left;		
+	var divHeight = $("#divListAdmin").height() + 10;
+	var divWidth = $("#divListAdmin").width();
+	$("#divListAdminOverlay").css('width', divWidth).css('height', divHeight).css('left', divLeft).css('top', divTop);
+	$("#divListAdminLoading").css('margin-top', divHeight/2.5);
+	$("#divListAdminOverlay").show();
+}
+function closeDeleteAdminMessage(){
+	$("#divDeleteAdminMessage").hide();
+	// Hide overlay
+	$("#divListAdminOverlay").hide();
+}
+function closeAddAdminMessage(){
+	$("#divAddAdminMessage").hide();
+	// Hide overlay
+	$("#divListAdminOverlay").hide();
+}
+// ================ Perform Admin User actions ================================ //
+function deleteUser( userName ) {
+	if( confirm('Are you sure you want to remove this user ?') ){
+		// Hide any previous error message
+		$("#divDeleteAdminMessage").hide();
+		// Overlay form
+		overlayDivListAdmin();
+		// Process via JSON		
+		$.post(deleteAdminAsync, {'username':userName},
+				 function(data){				 
+					var spanClose = "<div class='closeMessage' onclick='closeDeleteAdminMessage();'>x</div>";				 
+					if (data.error == "0") {
+						$("#divDeleteAdminMessage").html(data.message+spanClose).show().addClass('successMessage').removeClass('errorMessage');
+						// Reload list		
+						$("#divListAdmin").load(listAdminAsync);						
+				 	} else {
+				 		//alert(data.error);
+				 		$("#divDeleteAdminMessage").html(data.message+spanClose).show().addClass('errorMessage').removeClass('successMessage');
+				 	}			 		
+				}); // End post
+		return true;		
+	}	
+}
+//JQUERY functions ------------------->
+$(document).ready(function(){	
+	// Handles Edit/Create link button action
+	$("#btnAddAdmin").click( function(){		
+		// Get values
+		var userName = $("#username");
+		var password = $("#password");
+		var email = $("#email");
+		if( $.trim(userName.val()) == "" || $.trim(password.val()) == "" || $.trim(email.val()) == "" ){
+			//alert('User name and password are required fileds please validate');
+			var spanClose = "<div class='closeMessage' onclick='closeAddAdminMessage();'>x</div>";
+			$("#divAddAdminMessage").html('User name, email and password required'+spanClose).show().addClass('errorMessage').removeClass('successMessage');
+			return false;
+		} else {
+			// Overlay list
+			overlayDivListAdmin();
+			// Hide any previous error message
+			$("#divAddAdminMessage").hide();			
+			// Process the form via JSON			
+			$.post(addAdminAsync, $("#frmAddAdmin").serialize(),
+					 function(data){
+		 				var spanClose = "<div class='closeMessage' onclick='closeAddAdminMessage();'>x</div>";				 
+				 		if (data.error == "0") {
+				 			$("#frmAddAdmin").trigger("reset");
+				 			// Reload list
+				 			$("#divListAdmin").load(listAdminAsync);
+				 			$("#divAddAdminMessage").html(data.message+spanClose).show().addClass('successMessage').removeClass('errorMessage');
+					 	} else {
+					 		//alert(data.error);					 		
+					 		$("#divAddAdminMessage").html(data.message+spanClose).show().addClass('errorMessage').removeClass('successMessage');
+					 	}			 		
+	 			});
+			return true;			
+		}		
+	});	
+	// Handle ActiveOn column event
+	$( "div[id^='divActiveOn_']" ).click( function() {
+		var divId = this.id;
+		var userId = divId.replace('divActiveOn_', '');
+		$("#"+divId).hide();
+		$("#divActiveOff_"+userId).show();
+		// Unset active via JSON					
+		$.post(unsetActiveAsync, { 'id':userId } );
+	});
+	// Handle ActiveOff column event
+	$( "div[id^='divActiveOff_']" ).click( function() {
+		var divId = this.id;
+		var userId = divId.replace('divActiveOff_', '');
+		$("#"+divId).hide();
+		$("#divActiveOn_"+userId).show();
+		// Set active via JSON					
+		$.post(setActiveAsync, { 'id':userId } );
+	});
+});
+//-->
+</script>
+<div id ='divDeleteAdminMessage' style='display:none; width:90%; margin-left:auto; margin-right:auto;'></div>
+<div id='homeAdminUser'>
+<div id="divListAdminOverlay" class='divListAdminOverlay'>
+<div id='divListAdminLoading' style="width:50%; margin:0 0 0 30%;"><img style="border: none; height:30px; width:30px;" src='<?php echo $this->baseUrl(); ?>/img/loading.gif'><span class='divListAdminGeneral' style="font-size:16px;">Processing, please wait...</span></div>
+</div>
+<div id='divListAdmin'>
+<?php if ( isset($this->users) ) { ?>
+<table id='tblAdminUser'>
+<tr>
+<th>User Name</th>
+<th>Email</th>
+<th>Last Login</th>
+<th>Active</th>
+</tr>
+<?php foreach($this->users as $user){ ?>
+<tr>
+<td>
+<?php echo stripslashes($user->user);?>
+</td>    
+<td><?php echo stripslashes($user->email); ?></td>
+<td><?php echo ($user->last_login > 0) ? date('Y-m-d- H:i:s', $user->last_login) : '&nbsp;'; ?></td>
+<?php if($this->currentUser == $user->user) {?>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<?php } else { ?>
+<td>
+<?php $activeOn = ($user->active==1) ? 'visible' : 'invisible'; $activeOff = ($user->active==0) ? 'visible' : 'invisible';?>
+<div id='divActiveOn_<?php echo intval( $user->id );?>' class='checkOn <?php echo $activeOn;?>'><div class='lftCheckMark'>&#x2714;</div><div class='rgtBullet'></div></div>
+<div id='divActiveOff_<?php echo intval( $user->id );?>' class='checkOff <?php echo $activeOff;?>'><div class='lftBullet'></div></div>
+</td>
+<?php }?>
+</tr>    
+<?php } // end foreach ?>
+</table>
+<?php } ?>
+</div>
+<div id='divAddAdmin'>
+<div class='addAdminHeader'>Add User</div>
+<div class='addAdminWrapper'>
+<form id='frmAddAdmin'>    
+	<div><input type="text" placeholder='User Name' id="username" name="username" required autocomplete='off' value="" class='input' /></div>
+	<div><input type="email" placeholder='Email' id="email" name="email" required autocomplete='off' value="" class='input' /></div>
+	<div><input type="password" placeholder='Password' id="password" name="password" value="" required autocomplete='off' class='input' /></div>
+	<div><input type="button" id="btnAddAdmin" value="Submit" class='button'/></div>
+</form>
+</div><!-- End wrapper -->
+<div id ='divAddAdminMessage' class='errorMessage' style='display:none;font-size:small;'></div>
+</div><!-- End divAddAdmin -->
+<div style="clear:both"></div>
+</div>

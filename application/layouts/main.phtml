@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<title><?php echo COMPANY_NAME.'&nbsp;'.Zend_Registry::get("appAcronym");?></title>
+<script type="text/javascript" src="<?php echo $this->baseUrl();?>/jquery/jquery-1.11.2.min.js"></script>
+<style type="text/css">
+body{
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	background-color: rgb(245, 245, 245);
+}
+footer{
+	text-align:center; 
+	background-color:rgb(0, 133, 195); 
+	height:20px; 
+	padding:5px 0 5px; 
+	color:#ffffff; 
+	/*filter:alpha(opacity=85);	
+	opacity:0.85;*/		
+}
+section{
+	margin:5px;
+	min-height:550px;	
+}
+nav {
+    float: right;
+    width: 30%;
+}
+nav ul{
+	list-style-type: none;
+}
+nav li {
+    float: right;
+    margin-right: 50px;
+	color: #666666;
+	font-family: "Trebuchet MS", "Museo for Dell", "Museo for Dell 300", "Museo 300", Arial, sans-Serif;
+	font-size: large;
+	font-weight: bold;
+}
+nav li a{
+	text-decoration:none;
+}
+.page{
+	background-color: #ffffff;
+	width: 95%;
+	margin-left: auto; 
+	margin-right: auto;
+	min-width: 1000px;
+}
+/*Nice menu taken from http://www.htmlgoodies.com/beyond/css/how-to-create-horizontal-navigation-with-css3.html*/
+#menu {
+    width: 100%;
+    height: 35px;    
+    text-align: center;    
+    background-color: rgb(0, 56, 107);   
+	filter:alpha(opacity=90);	
+	opacity:0.90; 
+}
+#menu ul {
+    height: auto;
+    padding: 8px 0px;
+    margin: 0px;
+}
+#menu li {
+    display: inline;
+    padding: 20px;
+}
+#menu a {
+    text-decoration: none;
+    color: #ffffff;
+    padding: 8px 8px 8px 8px;
+}
+#menu a:hover {    
+	background-color: rgb(0, 133, 195);
+	color: #ffffff;
+}
+/* Divs message style */
+.warning{
+	width: 95%;	
+	background-color: #feefb3;    
+    color: #9f6000;
+	padding: 10px;		
+	border-radius:5px;
+	margin-left: auto; 
+	margin-right: auto;	
+	display: block;
+    font-size: 10pt;
+	font-weight: bold;
+    position: relative;
+    vertical-align: middle;
+}
+.errorMessage {
+    background-color: #ffbaba;
+    border: 1px solid;
+    color: #d8000c;
+    font-weight: bold;
+    margin-top: 5px;
+    padding: 10px;
+    position: relative;	
+	display: block;
+    font-size: 10pt;
+	font-weight: bold;    
+    vertical-align: middle;
+}
+.successMessage {
+    background-color: #dff2bf;
+    border: 1px solid;
+    color: #4f8a10;
+    font-weight: bold;
+    margin-top: 5px;
+    padding: 10px;
+    position: relative;	
+	display: block;
+    font-size: 10pt;
+	font-weight: bold;    
+    vertical-align: middle;
+}
+.closeMessage{
+	cursor: pointer;
+	font-size: 12pt;	
+	height: 22px;
+	position: absolute;
+	right: 11px;
+	text-align: center;
+	top: 1px;	
+}
+/* Set cursor on every button */
+.button{
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class='page'>
+<div id='header'>
+<div>
+<img alt="Company" title='Company' src="<?php echo $this->baseUrl();?>/img/your_logo.png">
+<?php if( isset($this->versionWarning) && 1 == 0 ){?>
+<div class='warning' style='text-align: center;' ><?php echo $this->versionWarning;?></div>
+<?php }?>
+<?php $user = Zend_Auth::getInstance()->getIdentity();?>
+<?php if($user && isset($user->api_user_username) ){?>
+<nav>
+<ul>
+<li><?php echo strip_tags($user->api_user_username);?></li>
+</ul>
+</nav>
+</div><!-- End div banner -->
+<div id="menu">
+<ul>
+<li><a href="<?php echo $this->baseUrl();?>/users/index/ol">One Login Users</a></li>
+<li><a href="<?php echo $this->baseUrl();?>/users/user/files">Load Users</a></li>
+<li><a href="<?php echo $this->baseUrl();?>/users">Site Admin Users</a></li>
+<li><a href="<?php echo $this->baseUrl();?>/portal/index/logout">Logout</a></li>
+</ul>
+</div><!-- Menu -->
+<?php } ?><!-- Has been identified -->
+</div><!-- Header -->
+<section>
+<?php echo $this->layout()->content;?>
+</section><!-- Content -->
+<footer>
+<?php echo COMPANY_NAME.'&nbsp;'.Zend_Registry::get("appname").'&nbsp;v'.APPLICATION_VERSION?>&nbsp;&copy; <?php echo date("Y"); ?>
+</footer><!-- Footer -->
+</div>
+<iframe id='ajaxFrame' name="ajaxFrame" style='display:none;'></iframe>
+</body>
+</html>

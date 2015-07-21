@@ -1,0 +1,245 @@
+<style>
+<!--
+#olUser{
+	padding:10px;
+	width:95%;
+	margin-left: auto; 
+	margin-right: auto;
+	margin-top:20px;
+	border: solid 1px rgb(0, 133, 195);
+	border-radius:5px;
+	min-height:500px;
+}
+/* =========== Table Admin User style ======== */
+#divListOl{
+	width:65%;
+	float:left;
+}
+#tblOlUser{	
+    width:98%;
+	border: solid 1px rgb(245, 245, 245);
+	font-size: 14px;
+	text-align:center;
+}
+#tblOlUser th{	
+    background-color: rgb(0, 133, 195);	 
+	padding:5px; 
+	color:#ffffff; 
+	filter:alpha(opacity=80);	
+	opacity:0.80;	
+}
+#tblOlUser td img{
+	height: 20px;
+	width: 20px;
+	cursor: pointer;
+	border: none;
+}
+#tblOlUser tr:hover{
+	background-color: rgb(245, 245, 245);
+}
+/* ============== Overlay style ========== */
+.divListOlOverlay{		
+	background:#f5f7f7;
+	opacity:0.7;
+	border-radius: inherit;
+	display:none; 
+	position:absolute;
+}
+.divListOlGeneral{
+	color: #0c5093;    
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0px 0px 3px 0px;
+    max-height: 13px;
+    overflow: hidden;
+    padding: 3px;
+}
+/* ======== Add OL form style ============ */
+#divAddOl{
+	width:30%;
+	float: right;
+	margin-right: 20px;	
+}
+.addOlHeader{
+	color: #ffffff;
+    background-color: rgb(0, 56, 107);
+    border: 1px solid rgb(0, 56, 107);
+    padding: 10px;
+    text-align: center;	   
+	filter:alpha(opacity=90);	
+	opacity:0.90;     
+}
+.addOlWrapper{
+	border: 1px solid rgb(245, 245, 245);
+    padding: 20px;
+}
+.input{    
+    border: solid 1px #bdc3c7;;
+    border-radius: 5px;
+    color: #7f8c8d;    
+    height: 30px;
+    margin-bottom: 15px;
+    text-align: center;
+    width: 100%;
+}
+.button{    
+    background: none repeat scroll 0 0 #3498db;
+	border: solid 1px #3498db;        
+    color: #ecf0f1;    
+    height: 30px;    
+    width: 100%;	
+	border-radius: 5px;
+	font-weight: bold;
+}
+.buttonDisabled{
+	background: none repeat scroll 0 0 #dedede;
+	border: solid 1px #dfdfdf;        
+    color: #ffffff;    
+    height: 30px;    
+    width: 100%;	
+	border-radius: 5px;
+	font-weight: bold;		
+}
+-->
+</style>
+<script type="text/javascript">
+<!--
+var baseUrl = '<?php echo $this->baseUrl();?>';
+var listOlAsync = baseUrl + '/users/index/ol-list-async'; // In case we need to reload the page
+var deleteOlAsync = baseUrl + '/users/index/ol-delete-async'; 
+var addOlAsync = baseUrl + '/users/index/ol-create-async';
+//JavaScript functions ========================================>
+function overlayDivListOl(){
+	var divSelectedPostion = $("#divListOl").position();
+	var divTop = divSelectedPostion.top;
+	var divLeft = divSelectedPostion.left;		
+	var divHeight = $("#divListOl").height();
+	var divWidth = $("#divListOl").width();
+	$("#divListOlOverlay").css('width', divWidth).css('height', divHeight).css('left', divLeft).css('top', divTop);
+	$("#divListOlLoading").css('margin-top', divHeight/2.5);
+	$("#divListOlOverlay").show();
+}
+function closeDeleteOlMessage(){
+	$("#divDeleteOlMessage").hide();
+	// Hide overlay
+	$("#divListOlOverlay").hide();
+}
+function closeAddOlMessage(){
+	$("#divAddOlMessage").hide();
+	// Hide overlay
+	$("#divListOlOverlay").hide();
+	// Enable button
+	$("#btnAddOl").prop("disabled",false).addClass('button').removeClass('buttonDisabled');
+}
+//================ Perform OneLogin User actions ================================ //
+function deleteUser( userId ) {
+	if( confirm('Are you sure you want to remove this user ?') ){
+		// Hide any previous error message
+		$("#divDeleteOlMessage").hide();
+		// Overlay form
+		overlayDivListOl();		
+		// Process via JSON		
+		$.post(deleteOlAsync, {'id':userId},
+				 function(data){				 
+					var spanClose = "<div class='closeMessage' onclick='closeDeleteOlMessage();'>x</div>";				 
+					if (data.error == "0") {
+						$("#divDeleteOlMessage").html(data.message+spanClose).show().addClass('successMessage').removeClass('errorMessage');
+						// Reload list		
+						$("#divListOl").load(listOlAsync);												
+				 	} else {
+				 		//alert(data.error);
+				 		$("#divDeleteOlMessage").html(data.message+spanClose).show().addClass('errorMessage').removeClass('successMessage');
+				 	}
+				 	// Move page to top in order to be able to see the message
+				 	window.scrollTo(1,1);			 		
+				}); // End post
+		return true;				
+	}	
+}
+//JQUERY functions ------------------->
+$(document).ready(function(){	
+	// Handles Edit/Create link button action
+	$("#btnAddOl").click( function(){
+		// Get values
+		var email = $("#email");
+		var firstName = $("#firstname");
+		var lastName = $("#lastname");
+		var password = $("#password");
+		if( $.trim(email.val()) == "" || $.trim(firstName.val()) == "" || $.trim(lastName.val()) == "" || $.trim(password.val()) == "" ){
+			//alert('User name and password are required fileds please validate');
+			var spanClose = "<div class='closeMessage' onclick='closeAddOlMessage();'>x</div>";
+			$("#divAddOlMessage").html('Email, first name and last name required'+spanClose).show().addClass('errorMessage').removeClass('successMessage');
+			return false;
+		} else {
+			// Overlay list
+			overlayDivListOl();			
+			// Hide any previous error message
+			$("#divAddOlMessage").hide();			
+			// Disable button
+			$(this).prop("disabled",true).addClass('buttonDisabled').removeClass('button');
+			// Process the form via JSON			
+			$.post(addOlAsync, $("#frmAddOl").serialize(),
+					 function(data){
+		 				var spanClose = "<div class='closeMessage' onclick='closeAddOlMessage();'>x</div>";				 
+				 		if (data.error == "0") {
+				 			$("#frmAddOl").trigger("reset");				 			
+				 			$("#divAddOlMessage").html(data.message+spanClose).show().addClass('successMessage').removeClass('errorMessage');
+					 		// Reload list
+				 			$("#divListOl").load(listOlAsync);
+					 	} else {
+					 		//alert(data.error);					 		
+					 		$("#divAddOlMessage").html(data.message+spanClose).show().addClass('errorMessage').removeClass('successMessage');
+					 	}			 		
+	 			});
+			return true;			
+		}		
+	});
+});
+//-->
+</script>
+<div id ='divDeleteOlMessage' style='display:none; width:90%; margin-left:auto; margin-right:auto;'></div>
+<div id='olUser'>
+<div id="divListOlOverlay" class='divListOlOverlay'>
+<div id='divListOlLoading' style="width:50%; margin:0 0 0 30%;"><img style="border: none; height:30px; width:30px;" src='<?php echo $this->baseUrl(); ?>/img/loading.gif'><span class='divListOlGeneral' style="font-size:16px;">Processing, please wait...</span></div>
+</div>
+<div id='divListOl'>
+<?php if ( isset($this->users) ) { ?>
+<table id='tblOlUser'>
+<tr>
+<th>Open Id Name</th>
+<th>Email</th>
+<th>Status</th>
+<th>Last Login</th>
+<th>Delete</th>
+</tr>
+<?php foreach($this->users as $user){ ?>
+<tr>
+<td><?php echo $user->openidname;?></td>
+<td><?php echo $user->email;?></td>
+<td><?php echo $this->getUserStatus($user->status);?></td>
+<td><?php echo $user->lastlogin;?></td>
+<?php if($this->currentUser == $user->openidname) {?>
+<td>&nbsp;</td>
+<?php } else { ?>
+<td><img onclick="deleteUser('<?php echo intval($user->id); ?>');" alt="Delete user" title='Delete user' src="<?php echo $this->baseUrl();?>/img/delete_icon.png"></td>
+<?php }?>
+</tr>
+<?php }?>    
+</table>
+<?php } ?>
+</div>
+<div id='divAddOl'>
+<div class='addOlHeader'>Add User</div>
+<div class='addOlWrapper'>
+<form id='frmAddOl'>
+    <div><input type="text" placeholder='email@dell.com' id="email" name="email" required autocomplete='off' value="" class='input' /></div>    
+	<div><input type="text" placeholder='First Name' id="firstname" name="firstname" required autocomplete='off' value="" class='input' /></div>
+	<div><input type="text" placeholder='Last Name' id="lastname" name="lastname" value="" required autocomplete='off' class='input' /></div>
+	<div><input type="password" placeholder='Password - at least 7 characters' id="password" name="password" value="" required autocomplete='off' class='input' /></div>
+	<div><input type="button" id="btnAddOl" value="Submit" class='button'/></div>
+</form>
+</div><!-- End wrapper -->
+<div id ='divAddOlMessage' class='errorMessage' style='display:none;font-size:small;'></div>
+</div><!-- End divAddOl -->
+<div style="clear:both"></div>
+</div>
